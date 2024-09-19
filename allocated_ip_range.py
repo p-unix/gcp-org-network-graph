@@ -49,9 +49,9 @@ def get_allocated_ip_ranges(project_id):
 
 # Example usage (you can move this to a Flask app later)
 if __name__ == "__main__":
-    project_id = "producer-1111"
-    region = "asia-south1"
-    vpc_name = "shared-vpc-4"
+    project_id = "enter_your_project_id_here"
+    region = "enter_your_region_here"
+    vpc_name = "enter_vpc_name_here"
 
     allocated_ip_ranges = get_allocated_ip_ranges(project_id, region, vpc_name)
 
