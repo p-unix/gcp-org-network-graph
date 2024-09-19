@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Allocated IP Ranges</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>Allocated IP Ranges</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Address</th>
+                <th>Type</th>
+                <th>Creation Timestamp</th>
+                <th>Description</th>
+
+
+
+                <th>Name</th>
+                <th>Network Tier</th>
+                <th>Purpose</th>
+                <th>Region</th>
+                <th>Self Link</th>
+                <th>Status</th>
+                <th>Users</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ip_range in ip_ranges %}
+            <tr>
+                <td>{{ ip_range.address }}</td>
+                <td>{{ ip_range.address_type }}</td>
+                <td>{{ ip_range.creation_timestamp }}</td>
+                <td>{{ ip_range.description }}</td>
+
+
+
+                <td>{{ ip_range.name }}</td>
+                <td>{{ ip_range.network_tier }}</td>
+                <td>{{ ip_range.purpose }}</td>
+                <td>{{ ip_range.region }}</td>
+                <td>{{ ip_range.self_link }}</td>
+                <td>{{ ip_range.status }}</td>
+                <td>{{ ip_range.users }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

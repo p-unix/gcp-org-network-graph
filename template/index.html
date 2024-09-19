@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GCP Organization Structure</title>
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <style type="text/css">
+        #mynetwork {
+            width: 100%;
+            height: 800px;
+            border: 1px solid lightgray;
+        }
+    </style>
+</head>
+<body>
+    <h1>GCP Organization Structure</h1>
+
+    <form method="POST">
+        <label for="organization_id">Enter GCP Organization ID:</label>
+        <input type="text" id="organization_id" name="organization_id" required>
+        <button type="submit">Generate Network Graph</button>
+    </form>
+
+    <form method="GET" action="/display_ip_ranges">
+        <button type="submit">Show Allocated IP Ranges</button>
+    </form>
+
+    {% if error_message %}
+        <p style="color: red;">{{ error_message }}</p>
+    {% endif %}
+
+    <div id="mynetwork"></div>
+
+    {% if graph_data %}
+    <script type="text/javascript">
+        var nodes = new vis.DataSet({{ graph_data.nodes | tojson }});
+        var edges = new vis.DataSet({{ graph_data.edges | tojson }});
+
+        var container = document.getElementById('mynetwork');
+        var data = {
+            nodes: nodes,
+            edges: edges
+        };
+
+        var options = {
+            nodes: {
+                shape: 'box',
+                font: {
+                    size: 12,
+                    face: 'arial'
+                },
+                margin: 10,
+                widthConstraint: { minimum: 100, maximum: 250 }
+            },
+            edges: {
+                arrows: 'to',
+                smooth: {
+                    type: "cubicBezier",
+                    forceDirection: "vertical"
+                }
+            },
+            layout: {
+                hierarchical: {
+                    direction: 'UD',
+                    sortMethod: 'directed',
+                    levelSeparation: 150,
+                    nodeSpacing: 200
+                }
+            },
+            physics: false
+        };
+
+        var network = new vis.Network(container, data, options);
+    </script>
+    {% endif %}
+
+</body>
+</html>
