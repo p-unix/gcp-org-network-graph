@@ -1,3 +1,5 @@
+import sys
+
 from flask import Flask, render_template, request
 from google.cloud import resourcemanager_v3
 from google.api_core import exceptions
@@ -8,7 +10,7 @@ import json
 app=Flask(__name__,template_folder='template')
 
 @app.route('/', methods=['GET', 'POST'])
-def index():
+def index(input_org_id):
     if request.method == 'POST':
         organization_id = request.form['organization_id']
         try:
@@ -33,6 +35,29 @@ def index():
             error_message = f"An error occurred: {str(e)}"
             return render_template('index.html', error_message=error_message)
 
+    return render_template('index.html')
+
+def input_argument_org_id(input_org_id):
+    organization_id = input_org_id
+    try:
+        # Fetch organization structure
+        nodes, edges = get_organization_structure(organization_id)
+        # Generate the graph data in a format suitable for vis.js
+        graph_data = {
+            'nodes': nodes,
+            'edges': edges
+        }
+        return render_template('index.html', graph_data=graph_data)
+
+    except exceptions.PermissionDenied:
+        error_message = f"Permission denied for organization {organization_id}. Please check your permissions."
+        return render_template('index.html', error_message=error_message)
+    except exceptions.NotFound:
+        error_message = f"Organization {organization_id} not found. Please check the organization ID."
+        return render_template('index.html', error_message=error_message)
+    except Exception as e:
+        error_message = f"An error occurred: {str(e)}"
+        return render_template('index.html', error_message=error_message)
     return render_template('index.html')
 def get_organization_structure(organization_id):
     parent = f"organizations/{organization_id}"
@@ -444,5 +469,18 @@ def generate_html(organization_id, nodes, edges):
     with open(f"gcp_organization_{organization_id}_structure.html", "w") as f:
         f.write(html_content)
 
+def main():
+    # Check if any arguments were provided
+    if len(sys.argv) > 1:
+        print("Arguments provided:")
+        for i, arg in enumerate(sys.argv[1:], start=1):
+            print(f"Argument {i}: {arg}")
+        input_org_id = sys.argv[1]
+        input_argument_org_id(input_org_id)
+
+    else:
+        print("No arguments provided.")
+        app.run(debug=True)
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    main()
