@@ -393,8 +393,8 @@ def sample_get_xpn_host(svc_project_id):  # Create a client
     client = compute_v1.ProjectsClient()
     # Initialize request argument(s)
     request1 = compute_v1.GetXpnHostProjectRequest(project=svc_project_id)
-    #request2 = compute_v1.GetXpnResourcesProjectsRequest(project="producer-1111")
-    #compute_v1.ProjectsGetXpnResources("producer-1111")
+    
+    
     # Make the request
     response1 = client.get_xpn_host(request=request1)
     #response2 = client.get_xpn_resources(request=request2)
